@@ -52,6 +52,7 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
   ctrl.unregisterSelectedItemWatcher = unregisterSelectedItemWatcher;
   ctrl.notFoundVisible               = notFoundVisible;
   ctrl.loadingIsVisible              = loadingIsVisible;
+  ctrl.notFoundClick                 = handleNotFoundClick;
 
   return init();
 
@@ -315,6 +316,16 @@ function MdAutocompleteCtrl ($scope, $element, $mdUtil, $mdConstant, $mdTheming,
    */
   function handleSelectedItemChange (selectedItem, previousSelectedItem) {
     selectedItemWatchers.forEach(function (watcher) { watcher(selectedItem, previousSelectedItem); });
+  }
+
+  /**
+   * Handles click event for the md-not-found-click attribute.
+   * @param searchText
+   * @param previousSearchText
+   */
+  function handleNotFoundClick (searchText, previousSearchText) {
+    blur();
+    angular.isFunction($scope.notFoundClick) && $scope.notFoundClick(getItemAsNameVal($scope.selectedItem));
   }
 
   /**
