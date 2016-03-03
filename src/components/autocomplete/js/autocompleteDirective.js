@@ -148,7 +148,8 @@ function MdAutocomplete () {
       floatingLabel:    '@?mdFloatingLabel',
       autoselect:       '=?mdAutoselect',
       menuClass:        '@?mdMenuClass',
-      inputId:          '@?mdInputId'
+      inputId:          '@?mdInputId',
+      notFoundClick:    '&?mdNotFoundClick'
     },
     link: function(scope, element, attrs, controller) {
       // Retrieve the state of using a md-not-found template by using our attribute, which will
@@ -194,8 +195,9 @@ function MdAutocomplete () {
                 ng-class="::menuClass"\
                 id="ul-{{$mdAutocompleteCtrl.id}}">\
               <li md-virtual-repeat="item in $mdAutocompleteCtrl.matches"\
-                  ng-class="{ selected: $index === $mdAutocompleteCtrl.index }"\
-                  ng-click="$mdAutocompleteCtrl.select($index)"\
+                  ng-class="{ selected: $index === $mdAutocompleteCtrl.index, disabled: item.is_disabled }"\
+                  ng-click="item.is_disabled || $mdAutocompleteCtrl.select($index)"\
+                  ng-disabled="item.is_disabled"\
                   md-extra-name="$mdAutocompleteCtrl.itemName">\
                   ' + itemTemplate + '\
                   </li>' + noItemsTemplate + '\
@@ -221,7 +223,10 @@ function MdAutocomplete () {
             template = templateTag.length ? templateTag.html() : '';
         return template
             ? '<li ng-if="$mdAutocompleteCtrl.notFoundVisible()"\
-                         md-autocomplete-parent-scope>' + template + '</li>'
+                    ng-click="$mdAutocompleteCtrl.notFoundClick(searchText,$event)">\
+                    <md-autocomplete-parent-scope md-autocomplete-replace>' 
+                    + template + 
+                    '</md-autocomplete-parent-scope></li>'
             : '';
 
       }
